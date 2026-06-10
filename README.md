@@ -25,13 +25,14 @@ You can also test it on my Vanilla-like server:
 
 ## Commands
 * `/changepass` — Opens the Dialog UI to change your password *(Player)*
-* `/license` — Links your premium account *(Player)* * `/forceunreg <player>` — Forcefully deletes a player's account *(Admin)*
+* `/license` — Links your premium account *(Player)* 
+* `/forceunreg <player>` — Forcefully deletes a player's account *(Admin)*
 * `/forcechangepass <player> <new_password>` — Forcefully changes a player's password *(Admin)*
 * `/dauth reload` — Reloads the plugin configuration *(Admin)*
 
 ## Requirements 
-- **Minecraft Version:** 1.21.6 or higher.
-- **Java Version:** Java 21 
+* **Minecraft Version:** 1.21.6 or higher.
+* **Java Version:** Java 21 
 
 ## License
 DialogAuth is licensed under the **GNU GPLv3** license. See the [LICENSE](LICENSE) file for more details.

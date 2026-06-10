@@ -2,6 +2,8 @@
 
 An authentication system that utilizes the Dialogs feature (added in Minecraft 1.21.6) to provide a modern, user-friendly UI for players.
 
+**check also:** [DialogAuthVelocity](https://github.com/MiFo4ka/DialogAuthVelocity) - optinional addon for `/license` work
+
 ## Features
 * **Multi-Database Support:** MySQL, H2, and PostgreSQL.
 * **Customizable Session System:** Keep players logged in securely.

@@ -22,6 +22,11 @@ api:
   host: "0.0.0.0"
   port: 8080
 
+  # auth token for security
+  # copy this token and place in velocity plugin config.yml file
+  token: ""
+
+
 
 # Player session settings
 session:

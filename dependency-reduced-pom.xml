@@ -4,7 +4,7 @@
   <groupId>fun.vespera</groupId>
   <artifactId>DialogAuth</artifactId>
   <name>DialogAuth</name>
-  <version>1.0</version>
+  <version>1.2</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>

@@ -36,6 +36,8 @@ public class AuthManager implements Listener {
     private final DialogAuth plugin;
     private final Map<UUID, CompletableFuture<AuthResult>> awaiting = new ConcurrentHashMap<>();
 
+    // (for new ip system)
+    private final Map<UUID, String> loginIps = new ConcurrentHashMap<>();
     private final Map<String, AtomicInteger> failedAttempts = new ConcurrentHashMap<>();
     private final Map<String, Long> bannedIps = new ConcurrentHashMap<>();
 
@@ -56,8 +58,15 @@ public class AuthManager implements Listener {
 
         // handle players connection & get nickname, ip
         PlayerConfigurationConnection connection = event.getConnection();
+        UUID uuid = connection.getProfile().getId();
         String username = connection.getProfile().getName();
-        String ip = ((java.net.InetSocketAddress) connection.getAddress()).getAddress().getHostAddress();
+
+        String ip = plugin.getAndRemovePendingIp(username);
+        if (ip == null) {
+            ip = ((java.net.InetSocketAddress) connection.getAddress()).getAddress().getHostAddress();
+        }
+
+        loginIps.put(uuid, ip);
 
         // defining domain that player used to connect to server
         InetSocketAddress virtualHost = connection.getVirtualHost();
@@ -168,6 +177,9 @@ public class AuthManager implements Listener {
         AuthResult result = future.join();
         awaiting.remove(uuid);
 
+        awaiting.remove(uuid);
+        loginIps.remove(uuid);
+
         audience.closeDialog();
 
         switch (result) {
@@ -213,7 +225,7 @@ public class AuthManager implements Listener {
         // get player data
         UUID uuid = cfg.getProfile().getId();
         String username = cfg.getProfile().getName();
-        String ip = ((java.net.InetSocketAddress) cfg.getAddress()).getAddress().getHostAddress();
+        String ip = loginIps.getOrDefault(uuid, ((java.net.InetSocketAddress) cfg.getAddress()).getAddress().getHostAddress());
 
         CompletableFuture<AuthResult> future = awaiting.get(uuid);
         if (future == null || future.isDone()) return;

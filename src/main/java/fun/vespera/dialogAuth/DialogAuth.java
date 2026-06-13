@@ -1,5 +1,7 @@
 package fun.vespera.dialogAuth;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import fun.vespera.dialogAuth.command.AuthCommand;
 import fun.vespera.dialogAuth.api.PremiumAuth;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -15,6 +17,20 @@ public final class DialogAuth extends JavaPlugin {
     private DatabaseManager db;
     private ExecutorService asyncExecutor;
     private PremiumAuth api;
+
+    private final Cache<String, String> pendingIps = CacheBuilder.newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
+
+    public void addPendingIp(String username, String ip) {
+        pendingIps.put(username, ip);
+    }
+
+    public String getAndRemovePendingIp(String username) {
+        String ip = pendingIps.getIfPresent(username);
+        pendingIps.invalidate(username); // Сразу удаляем после получения
+        return ip;
+    }
 
     @Override
     public void onEnable() {

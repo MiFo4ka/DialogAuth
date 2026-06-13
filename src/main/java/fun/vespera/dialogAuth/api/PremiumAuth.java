@@ -48,15 +48,30 @@ public class PremiumAuth {
                 // false response by default(for security)
                 String query = exchange.getRequestURI().getQuery();
                 String response = "false";
+                String username = null;
+                String ip = null;
 
                 if (query != null && query.startsWith("username=")) {
-                    // get players nickname
-                    String username = query.substring(9);
-                    // checkin isPremium in db
-                    DatabaseManager.PlayerData data = plugin.getDb().getPlayerData(username).join();
-                    if (data != null && data.isPremium()) {
-                        // changing response to true
-                        response = "true";
+                    // get API params
+                    String[] params = query.split("&");
+
+                    // spliting params to ip & nickname
+                    for (String param : params) {
+                        if (param.startsWith("username=")) username = param.substring(9);
+                        if (param.startsWith("ip=")) ip = param.substring(3);
+                    }
+
+                    if (username != null) {
+                        // adding players ip to cache
+                        if (ip != null) {
+                            plugin.addPendingIp(username, ip);
+                        }
+                        // checkin isPremium in db
+                        DatabaseManager.PlayerData data = plugin.getDb().getPlayerData(username).join();
+                        if (data != null && data.isPremium()) {
+                            // changing response to true
+                            response = "true";
+                        }
                     }
                 }
                 // sending http code: 200 (success)
